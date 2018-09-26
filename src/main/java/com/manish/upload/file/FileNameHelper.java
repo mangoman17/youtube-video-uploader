@@ -73,10 +73,30 @@ public class FileNameHelper {
                     subVideoFilesList = new ArrayList<>();
                     videoFilesMap.put(lastmodified, subVideoFilesList);
                 }
+                
                 subVideoFilesList.add(videoFile);
             }
         }
 
         return videoFilesMap;
+    }
+    
+    public void populateVideoFileNewNames(Map<Long, List<VideoFile>> videoFilesMap) {
+    	for(Map.Entry<Long, List<VideoFile>> entry : videoFilesMap.entrySet()) {
+    		long lastModified = entry.getKey();
+    		List<VideoFile> subVideoFilesList = entry.getValue();
+    		if(!CollectionUtils.isEmpty(subVideoFilesList)) {
+                if(subVideoFilesList.size() == 1) {
+                	VideoFile videoFile = subVideoFilesList.get(0);
+                	videoFile.setNewFileLabel(DATE_FORMAT.format(new Date(lastModified)));
+                } else {
+                	int count = 1;
+                	for(VideoFile videoFile : subVideoFilesList) {
+                		videoFile.setNewFileLabel(DATE_FORMAT.format(new Date(lastModified)) + count);
+                		count++;
+                	}
+                }
+            }
+    	}
     }
 }
